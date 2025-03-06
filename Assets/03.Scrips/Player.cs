@@ -7,34 +7,35 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    private Player_AC _inputAC;
+    
+    public CharacterController CharCtrl { get; set; }
+    private float _curJumpPower;
 
-    private Vector2 _moveInput;
-    private Vector2 _aimInput;
+    [SerializeField] private float _gravity;
+    [SerializeField] private float _gravityMultipl;
+    [SerializeField] private float _speed;
+    [SerializeField] private float _jumpPower;
 
-    [SerializeField] private float gravity;
+    public bool IsGround { get; set; }
 
     private void Awake()
     {
-        _inputAC = new Player_AC();
-
-        _inputAC.Player.Move.performed += context => _moveInput = context.ReadValue<Vector2>();
-        _inputAC.Player.Move.canceled += context => _moveInput = Vector2.zero;
+        CharCtrl = GetComponent<CharacterController>();
+        Debug.LogWarning($"Failed GetComponent CharacterComponent from {this.name} gameObject");
     }
 
-    private void Update()
+    public void Jump()
     {
-        // 중력
-        transform.position -= Vector3.up * gravity;
+        if (IsGround) _curJumpPower = _jumpPower;
     }
 
-    private void OnEnable()
+    public void Move(Vector2 inputValue)
     {
-        _inputAC.Enable();
-    }
+        _gravityMultipl = Mathf.Clamp(_gravityMultipl, 0, 1); // 배율 0 부터 1 사이
+        Vector3 moveDir = Vector3.right * inputValue.x + Vector3.forward * inputValue.y;
+        _curJumpPower -= _gravity * Time.deltaTime;
+        _curJumpPower = Mathf.Clamp(_curJumpPower, -1 * _gravity * _gravityMultipl, _jumpPower);
 
-    private void OnDisable()
-    {
-        _inputAC.Disable();
+        IsGround = (CharCtrl.Move((moveDir + Vector3.up * _curJumpPower) * _speed * Time.deltaTime) & CollisionFlags.Below) != 0;
     }
 }
