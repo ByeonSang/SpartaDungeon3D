@@ -24,13 +24,21 @@ public class Player : MonoBehaviour
     [Header("TargetAim")]
     [SerializeField] private LayerMask aimLayerMask;
 
+    [Space]
+    [SerializeField] private LayerMask itemLayerMask;
+    private Collider fieldCollider;
+
     public bool IsGround { get; set; }
 
     private void Awake()
     {
         cam = Camera.main;
         CharCtrl = GetComponent<CharacterController>();
-        Debug.LogWarning($"Failed GetComponent CharacterComponent from {this.name} gameObject");
+    }
+
+    private void Update()
+    {
+        CheckFieldItem();
     }
 
     public void Jump()
@@ -40,7 +48,7 @@ public class Player : MonoBehaviour
 
     public void Move(Vector2 inputValue)
     {
-        _gravityMultipl = Mathf.Clamp(_gravityMultipl, 0, 1); // ¹èÀ² 0 ºÎÅÍ 1 »çÀÌ
+        _gravityMultipl = Mathf.Clamp(_gravityMultipl, 0, 1); // ï¿½ï¿½ï¿½ï¿½ 0 ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ï¿½ï¿½
         Vector3 moveDir = Vector3.right * inputValue.x + Vector3.forward * inputValue.y;
         _curJumpPower -= _gravity * Time.deltaTime;
         _curJumpPower = Mathf.Clamp(_curJumpPower, -1 * _gravity * _gravityMultipl, _jumpPower);
@@ -61,5 +69,32 @@ public class Player : MonoBehaviour
             dir.Normalize();
             model.transform.forward = new Vector3(dir.x, 0, dir.y);
         }
+    }
+
+    private void CheckFieldItem()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f, itemLayerMask);
+
+        if(colliders.Length > 0)
+        {
+            float minDist = 100f;
+            Collider collider = colliders[0];
+            foreach (var item in colliders)
+            {
+                float dist = Vector3.Distance(transform.position, item.transform.position);
+                if (dist  < minDist)
+                {
+                    minDist = dist;
+                    collider = item;
+                }
+            }
+
+            Debug.Log(collider.name);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, 3f);
     }
 }
