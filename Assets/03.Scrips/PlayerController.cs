@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Animator _anim;
 
     public Vector2 MoveInput { get; set; }
+    public Vector2 MousePos { get; set; }
 
     public StateMachine stateMachine;
     public PlayerIdleState IdleState { get; set; }
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
         _inputAC.Player.Move.performed += context => MoveInput = context.ReadValue<Vector2>();
         _inputAC.Player.Move.canceled += context => MoveInput = Vector2.zero;
         _inputAC.Player.Jump.started += context => _player.Jump();
+        _inputAC.Player.MouseDelta.performed += context => MousePos = context.ReadValue<Vector2>();
 
         stateMachine = new StateMachine();
         IdleState = new PlayerIdleState(this, _player, stateMachine, _anim,"Idle");
@@ -41,8 +43,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        stateMachine.CurrentState.Update();
+        stateMachine.CurrentState.Update(); // 局聪皋捞记 贸府
         _player.Move(MoveInput);
+        _player.SetTargetPos(MousePos);
     }
 
     private void OnEnable()

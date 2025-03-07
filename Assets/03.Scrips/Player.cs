@@ -9,17 +9,27 @@ public class Player : MonoBehaviour
 {
     
     public CharacterController CharCtrl { get; set; }
-    private float _curJumpPower;
+    private Camera cam;
 
+
+    [Header("Gravity")]
     [SerializeField] private float _gravity;
     [SerializeField] private float _gravityMultipl;
+
+    [Header("Movement")]
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpPower;
+    private float _curJumpPower;
+
+    [Header("TargetAim")]
+    [SerializeField] private GameObject targetObject;
+    [SerializeField] private LayerMask aimLayerMask;
 
     public bool IsGround { get; set; }
 
     private void Awake()
     {
+        cam = Camera.main;
         CharCtrl = GetComponent<CharacterController>();
         Debug.LogWarning($"Failed GetComponent CharacterComponent from {this.name} gameObject");
     }
@@ -37,5 +47,22 @@ public class Player : MonoBehaviour
         _curJumpPower = Mathf.Clamp(_curJumpPower, -1 * _gravity * _gravityMultipl, _jumpPower);
 
         IsGround = (CharCtrl.Move((moveDir + Vector3.up * _curJumpPower) * _speed * Time.deltaTime) & CollisionFlags.Below) != 0;
+    }
+
+    public void SetTargetPos(Vector3 newPosition)
+    {
+        if (targetObject == null) return;
+
+        Ray ray = cam.ScreenPointToRay(newPosition);
+        
+        if(Physics.Raycast(ray, out var hitinfo, Mathf.Infinity, aimLayerMask))
+        {
+            GameObject model = GetComponentInChildren<Animator>().gameObject;
+            Vector2 playerPos = new Vector2(transform.position.x, transform.position.z);
+            Vector2 targetPos = new Vector2(hitinfo.point.x, hitinfo.point.z);
+            Vector2 dir = targetPos - playerPos;
+            dir.Normalize();
+            model.transform.forward = new Vector3(dir.x, 0, dir.y);
+        }
     }
 }
