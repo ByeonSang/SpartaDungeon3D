@@ -44,8 +44,6 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         stateMachine.CurrentState.Update(); // 局聪皋捞记 贸府
-        _player.Move(MoveInput);
-        _player.SetTargetPos(MousePos);
     }
 
     private void OnEnable()

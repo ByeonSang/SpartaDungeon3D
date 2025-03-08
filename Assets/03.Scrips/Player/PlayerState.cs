@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerState
 {
@@ -26,7 +27,9 @@ public class PlayerState
 
     public virtual void Update()
     {
-
+        player.Move(playerCtrl.MoveInput);
+        player.SetGravity();
+        player.SetDirection(playerCtrl.MousePos);
     }
 
     public virtual void Exit()

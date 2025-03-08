@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask itemLayerMask;
     private Collider fieldCollider;
 
-    public bool IsGround { get; set; }
+    public bool IsGround { get; private set; }
 
     private void Awake()
     {
@@ -43,20 +43,24 @@ public class Player : MonoBehaviour
 
     public void Jump()
     {
+        // TODO::
         if (IsGround) _curJumpPower = _jumpPower;
+    }
+
+    public void SetGravity()
+    {
+        IsGround = (CharCtrl.Move(Vector3.up * _curJumpPower * Time.deltaTime) & CollisionFlags.Below) != 0;
+
+        if(!IsGround) _curJumpPower -= _gravity * Time.deltaTime;
     }
 
     public void Move(Vector2 inputValue)
     {
-        _gravityMultipl = Mathf.Clamp(_gravityMultipl, 0, 1); // ���� 0 ���� 1 ����
         Vector3 moveDir = Vector3.right * inputValue.x + Vector3.forward * inputValue.y;
-        _curJumpPower -= _gravity * Time.deltaTime;
-        _curJumpPower = Mathf.Clamp(_curJumpPower, -1 * _gravity * _gravityMultipl, _jumpPower);
-
-        IsGround = (CharCtrl.Move((moveDir + Vector3.up * _curJumpPower) * _speed * Time.deltaTime) & CollisionFlags.Below) != 0;
+        CharCtrl.Move(moveDir * _speed * Time.deltaTime);
     }
 
-    public void SetTargetPos(Vector3 newPosition)
+    public void SetDirection(Vector3 newPosition)
     {
         Ray ray = cam.ScreenPointToRay(newPosition);
         

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class PlayerGroundState : PlayerState
 {
@@ -21,7 +22,8 @@ public class PlayerGroundState : PlayerState
     public override void Update()
     {
         base.Update();
-        if (player.CharCtrl.velocity.y != 0 && !player.IsGround)
+
+        if (!player.IsGround)
             stateMachine.ChangeState(playerCtrl.JumpState);
             
     }
