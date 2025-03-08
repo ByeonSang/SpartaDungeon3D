@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    
+    private Interaction _interaction;
     public CharacterController CharCtrl { get; set; }
     private Camera cam;
 
@@ -24,9 +25,7 @@ public class Player : MonoBehaviour
     [Header("TargetAim")]
     [SerializeField] private LayerMask aimLayerMask;
 
-    [Space]
-    [SerializeField] private LayerMask itemLayerMask;
-    private Collider fieldCollider;
+    private Collider _curDetected { get; set; }
 
     public bool IsGround { get; private set; }
 
@@ -36,9 +35,14 @@ public class Player : MonoBehaviour
         CharCtrl = GetComponent<CharacterController>();
     }
 
+    private void Start()
+    {
+        TryGetComponent<Interaction>(out _interaction);
+    }
+
     private void Update()
     {
-        CheckFieldItem();
+        _curDetected = _interaction.CheckField(); // 상호작용 처리
     }
 
     public void Jump()
@@ -75,24 +79,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void CheckFieldItem()
+    public void OnInteraction()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f, itemLayerMask);
-
-        if(colliders.Length > 0)
-        {
-            float minDist = 100f;
-            Collider collider = colliders[0];
-            foreach (var item in colliders)
-            {
-                float dist = Vector3.Distance(transform.position, item.transform.position);
-                if (dist  < minDist)
-                {
-                    minDist = dist;
-                    collider = item;
-                }
-            }
-        }
+        if (_curDetected != null)
+            _curDetected.gameObject.SetActive(false);
     }
 
     private void OnDrawGizmos()

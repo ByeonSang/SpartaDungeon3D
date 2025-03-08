@@ -7,7 +7,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     // Destroy 여부 확인용
     private static bool _ShuttingDown = false;
     private static T _Instance;
-    public T Instance
+    public static T Instance
     {
         get
         {
