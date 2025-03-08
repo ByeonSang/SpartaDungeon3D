@@ -92,8 +92,6 @@ public class Player : MonoBehaviour
                     collider = item;
                 }
             }
-
-            Debug.Log(collider.name);
         }
     }
 
