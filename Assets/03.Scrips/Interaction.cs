@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class Interaction : MonoBehaviour
 {
-    public event Action OnInteraction;
-    public event Action CancelInteraction;
+    [SerializeField] private InteractionUI _interUI;
 
     [SerializeField] private LayerMask InteractionLayerMask;
     private Collider _curCollider;
@@ -30,7 +29,8 @@ public class Interaction : MonoBehaviour
                 {
                     _minDist = dist;
                     _curCollider = item;
-                    OnInteraction?.Invoke();
+                    _interUI.SetText(item.GetComponent<FieldItem>().Data);
+                    _interUI.StartAnimation();
                 }
             }
         }
@@ -38,7 +38,7 @@ public class Interaction : MonoBehaviour
         {
             _curCollider = null;
             _minDist = float.MaxValue;
-            CancelInteraction?.Invoke();
+            _interUI.StopAnimation();
         }
 
         return _curCollider;

@@ -1,12 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 
 public class InteractionUI : MonoBehaviour, IMovableUI
 {
-    [SerializeField] private Interaction _interaction;
-    
+    [SerializeField] private TextMeshProUGUI text;
+
     [SerializeField] private AnimationCurve animDelta;
     [SerializeField] private float duration;
 
@@ -20,16 +22,8 @@ public class InteractionUI : MonoBehaviour, IMovableUI
 
     private void Start()
     {
-        _interaction.OnInteraction += StartAnimation;
-        _interaction.CancelInteraction += StopAnimation;
         rectTrans = GetComponent<RectTransform>();
         _startPosition = rectTrans.anchoredPosition;
-    }
-
-    private void OnDestroy()
-    {
-        _interaction.OnInteraction -= StartAnimation;
-        _interaction.CancelInteraction -= StopAnimation;
     }
 
     public void ResetAnimation()
@@ -77,5 +71,10 @@ public class InteractionUI : MonoBehaviour, IMovableUI
             rectTrans.anchoredPosition = Vector3.Lerp(_endPosition, _startPosition, animDelta.Evaluate(percent));
             yield return null;
         }
+    }
+
+    public void SetText(ItemData item)
+    {
+        text.text = item.name;
     }
 }

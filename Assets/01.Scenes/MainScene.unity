@@ -1397,6 +1397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 289ea5740a638604caa2160ccaf07aea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interUI: {fileID: 1203282691}
   InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -1626,7 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd77b5b62d3ac3146a71820adc807bd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interaction: {fileID: 1003653626}
+  text: {fileID: 1177384969}
   animDelta:
     serializedVersion: 2
     m_Curve:
