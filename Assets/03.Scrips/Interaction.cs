@@ -2,23 +2,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Interaction : MonoBehaviour
 {
-    [SerializeField] private InteractionUI _interUI;
+    public Action<ItemData> OnDectedInteraction;
+    public Action OnCancelInteraction;
 
     [SerializeField] private LayerMask InteractionLayerMask;
     private Collider _curCollider;
     private float _minDist;
 
+    private Player _player;
+
     private void Start()
     {
         _minDist = float.MaxValue;
+        TryGetComponent<Player>(out _player);
     }
 
     public Collider CheckField()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f, InteractionLayerMask);
+        Collider[] colliders = Physics.OverlapSphere(_player.checkDetectedTrans.position, 1f, InteractionLayerMask);
         int length = colliders.Length;
         if (length > 0)
         {
@@ -29,16 +34,15 @@ public class Interaction : MonoBehaviour
                 {
                     _minDist = dist;
                     _curCollider = item;
-                    _interUI.SetText(item.GetComponent<FieldItem>().Data);
-                    _interUI.StartAnimation();
+                    OnDectedInteraction?.Invoke(item.GetComponent<FieldItem>().Data);
                 }
             }
         }
-        else if(length == 0 && _curCollider != null)
+        else if(_curCollider != null)
         {
             _curCollider = null;
             _minDist = float.MaxValue;
-            _interUI.StopAnimation();
+            OnCancelInteraction?.Invoke();
         }
 
         return _curCollider;

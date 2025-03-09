@@ -76,5 +76,6 @@ public class InteractionUI : MonoBehaviour, IMovableUI
     public void SetText(ItemData item)
     {
         text.text = item.name;
+        StartAnimation();
     }
 }

@@ -10,8 +10,10 @@ public class Player : MonoBehaviour
 {
     private Interaction _interaction;
     public CharacterController CharCtrl { get; set; }
+    public Transform checkDetectedTrans;
     private Camera cam;
 
+    [SerializeField] private GameObject _model;
 
     [Header("Gravity")]
     [SerializeField] private float _gravity;
@@ -70,12 +72,11 @@ public class Player : MonoBehaviour
         
         if(Physics.Raycast(ray, out var hitinfo, Mathf.Infinity, aimLayerMask))
         {
-            GameObject model = GetComponentInChildren<Animator>().gameObject;
             Vector2 playerPos = new Vector2(transform.position.x, transform.position.z);
             Vector2 targetPos = new Vector2(hitinfo.point.x, hitinfo.point.z);
             Vector2 dir = targetPos - playerPos;
             dir.Normalize();
-            model.transform.forward = new Vector3(dir.x, 0, dir.y);
+            _model.transform.forward = new Vector3(dir.x, 0, dir.y);
         }
     }
 
@@ -87,6 +88,6 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, 3f);
+        Gizmos.DrawWireSphere(checkDetectedTrans.position, 1f);
     }
 }
