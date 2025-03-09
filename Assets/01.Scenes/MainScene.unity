@@ -1324,7 +1324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8201f80db58096e4f8b39c3b61c3f096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkDetectedTrans: {fileID: 1793682899}
   _model: {fileID: 1288822455}
   _gravity: 15
   _gravityMultipl: 0.4
@@ -1404,6 +1403,7 @@ MonoBehaviour:
   InteractionLayerMask:
     serializedVersion: 2
     m_Bits: 128
+  _checkInteractionTrans: {fileID: 1793682899}
 --- !u!114 &1003653627
 MonoBehaviour:
   m_ObjectHideFlags: 0

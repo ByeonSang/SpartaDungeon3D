@@ -10,6 +10,7 @@ public class Interaction : MonoBehaviour
     public Action OnCancelInteraction;
 
     [SerializeField] private LayerMask InteractionLayerMask;
+    [SerializeField] private Transform _checkInteractionTrans;
     private Collider _curCollider;
     private float _minDist;
 
@@ -23,7 +24,7 @@ public class Interaction : MonoBehaviour
 
     public Collider CheckField()
     {
-        Collider[] colliders = Physics.OverlapSphere(_player.checkDetectedTrans.position, 1f, InteractionLayerMask);
+        Collider[] colliders = Physics.OverlapSphere(_checkInteractionTrans.position, 1f, InteractionLayerMask);
         int length = colliders.Length;
         if (length > 0)
         {
@@ -46,5 +47,10 @@ public class Interaction : MonoBehaviour
         }
 
         return _curCollider;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(_checkInteractionTrans.position, 1f);
     }
 }

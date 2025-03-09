@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
 {
     private Interaction _interaction;
     public CharacterController CharCtrl { get; set; }
-    public Transform checkDetectedTrans;
     private Camera cam;
 
     [SerializeField] private GameObject _model;
@@ -84,10 +83,5 @@ public class Player : MonoBehaviour
     {
         if (_curDetected != null)
             _curDetected.gameObject.SetActive(false);
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(checkDetectedTrans.position, 1f);
     }
 }
