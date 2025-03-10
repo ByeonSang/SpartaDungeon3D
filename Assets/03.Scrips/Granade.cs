@@ -28,6 +28,10 @@ public class Granade : MonoBehaviour
         {
             if (col.gameObject.layer == LayerMask.NameToLayer("Cube"))
                 col.GetComponent<Rigidbody>().AddExplosionForce(_explosionPower, transform.position, _explosionScope, _explosionScope, ForceMode.Impulse);
+            else if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                GameManager.Instance.player.TakeDamage(50f);
+            }
         }
     }
 }

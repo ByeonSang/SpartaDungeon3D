@@ -11,10 +11,16 @@ public class Player : MonoBehaviour
     private Interaction _interaction;
     public CharacterController CharCtrl { get; set; }
     private Camera cam;
+    public Animator Anim { get; private set; }
 
     [SerializeField] private GameObject _model;
     [SerializeField] private GameObject _weaponAttach;
     [SerializeField] private GameObject _granade;
+
+    [Header("StatInfo")]
+    private float _curHealth;
+    public float _maxHealth;
+    public bool IsDead { get; private set; }
 
     [Header("Gravity")]
     [SerializeField] private float _gravity;
@@ -37,14 +43,19 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        Anim = GetComponentInChildren<Animator>();
         cam = Camera.main;
         CharCtrl = GetComponent<CharacterController>();
     }
 
     private void Start()
     {
+        GameManager.Instance.player = this;
         TryGetComponent<Interaction>(out _interaction);
         _weaponAttach.SetActive(false);
+
+        _curHealth = _maxHealth;
+        IsDead = false;
     }
 
     private void Update()
@@ -104,5 +115,24 @@ public class Player : MonoBehaviour
         Granade gr = obj.GetComponent<Granade>();
         gr.Fire(_model.transform.forward);
         HasGranade = false;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        _curHealth -= damage;
+        if(_curHealth <= 0)
+        {
+            _curHealth = 0;
+            IsDead = true;
+            Anim.SetTrigger("Die");
+        }
+        else if(_curHealth > _maxHealth)
+        {
+            _curHealth = _maxHealth;
+        }
+        else
+        {
+            Anim.SetTrigger("Hit");
+        }
     }
 }

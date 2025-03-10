@@ -27,6 +27,7 @@ public class PlayerState
 
     public virtual void Update()
     {
+        if (GameManager.Instance.player.IsDead) return;
         player.Move(playerCtrl.MoveInput);
         player.SetGravity();
         player.SetDirection(playerCtrl.MousePos);

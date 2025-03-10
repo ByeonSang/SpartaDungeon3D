@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
 {
     private Player _player;
     private Player_AC _inputAC;
-    private Animator _anim;
 
     public Vector2 MoveInput { get; set; }
     public Vector2 MousePos { get; set; }
@@ -21,7 +20,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _inputAC = new Player_AC();
-        _anim = GetComponentInChildren<Animator>();
         TryGetComponent<Player>(out _player);
 
         _inputAC.Player.Move.performed += context => MoveInput = context.ReadValue<Vector2>();
@@ -32,9 +30,9 @@ public class PlayerController : MonoBehaviour
         _inputAC.Player.MouseDelta.performed += context => MousePos = context.ReadValue<Vector2>();
 
         stateMachine = new StateMachine();
-        IdleState = new PlayerIdleState(this, _player, stateMachine, _anim,"Idle");
-        MoveState = new PlayerMoveState(this, _player, stateMachine, _anim, "Move");
-        JumpState = new PlayerJumpState(this, _player, stateMachine, _anim, "Jump");
+        IdleState = new PlayerIdleState(this, _player, stateMachine, _player.Anim,"Idle");
+        MoveState = new PlayerMoveState(this, _player, stateMachine, _player.Anim, "Move");
+        JumpState = new PlayerJumpState(this, _player, stateMachine, _player.Anim, "Jump");
     }
 
     private void Start()
