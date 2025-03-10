@@ -18,8 +18,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _granade;
 
     [Header("StatInfo")]
-    private float _curHealth;
-    public float _maxHealth;
+    public float maxHealth;
+    public float curHealth { get; private set; }
     public bool IsDead { get; private set; }
 
     [Header("Gravity")]
@@ -54,7 +54,7 @@ public class Player : MonoBehaviour
         TryGetComponent<Interaction>(out _interaction);
         _weaponAttach.SetActive(false);
 
-        _curHealth = _maxHealth;
+        curHealth = maxHealth;
         IsDead = false;
     }
 
@@ -110,29 +110,35 @@ public class Player : MonoBehaviour
     {
         if (!HasGranade) return;
 
-        _weaponAttach.SetActive(false);
-        GameObject obj = Instantiate(_granade,transform.position + Vector3.up, Quaternion.identity);
-        Granade gr = obj.GetComponent<Granade>();
-        gr.Fire(_model.transform.forward);
+        Anim.SetTrigger("Throw"); // 애니메이션 트리거 발동
         HasGranade = false;
     }
 
     public void TakeDamage(float damage)
     {
-        _curHealth -= damage;
-        if(_curHealth <= 0)
+        curHealth -= damage;
+        UIManager.Instance.Hpbar?.Invoke();
+        if(curHealth <= 0)
         {
-            _curHealth = 0;
+            curHealth = 0;
             IsDead = true;
             Anim.SetTrigger("Die");
         }
-        else if(_curHealth > _maxHealth)
+        else if(curHealth > maxHealth)
         {
-            _curHealth = _maxHealth;
+            curHealth = maxHealth;
         }
         else
         {
             Anim.SetTrigger("Hit");
         }
+    }
+
+    public void AnimationTrigger()
+    {
+        _weaponAttach.SetActive(false);
+        GameObject obj = Instantiate(_granade, _weaponAttach.transform.position, Quaternion.identity);
+        Granade gr = obj.GetComponent<Granade>();
+        gr.Fire(_model.transform.forward);
     }
 }
