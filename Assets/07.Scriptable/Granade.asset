@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Granade
   Description: BombBomb!!
+  prefab: {fileID: 0}
