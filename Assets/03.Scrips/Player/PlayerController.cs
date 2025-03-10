@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
         _inputAC.Player.Move.performed += context => MoveInput = context.ReadValue<Vector2>();
         _inputAC.Player.Move.canceled += context => MoveInput = Vector2.zero;
         _inputAC.Player.Jump.started += context => _player.Jump();
+        _inputAC.Player.Fire.started += context => _player.Fire();
         _inputAC.Player.Interaction.started += context => _player.OnInteraction();
         _inputAC.Player.MouseDelta.performed += context => MousePos = context.ReadValue<Vector2>();
 

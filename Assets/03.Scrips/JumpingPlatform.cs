@@ -21,9 +21,6 @@ public class JumpingPlatform : MonoBehaviour
     private void Update()
     {
         if(Physics.BoxCast(transform.position,_collider.size, Vector3.up, Quaternion.identity, 0.5f,whatIsPlayer))
-        {
-            Debug.Log("JUMP!!");
             _player.Jump(_jumpForce);
-        }
     }
 }

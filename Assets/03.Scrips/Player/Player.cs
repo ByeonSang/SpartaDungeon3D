@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     private Camera cam;
 
     [SerializeField] private GameObject _model;
+    [SerializeField] private GameObject _weaponAttach;
+    [SerializeField] private GameObject _granade;
 
     [Header("Gravity")]
     [SerializeField] private float _gravity;
@@ -25,6 +27,9 @@ public class Player : MonoBehaviour
 
     [Header("TargetAim")]
     [SerializeField] private LayerMask aimLayerMask;
+
+    public bool HasGranade { get; set; }
+
 
     private Collider _curDetected { get; set; }
 
@@ -39,6 +44,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         TryGetComponent<Interaction>(out _interaction);
+        _weaponAttach.SetActive(false);
     }
 
     private void Update()
@@ -82,6 +88,21 @@ public class Player : MonoBehaviour
     public void OnInteraction()
     {
         if (_curDetected != null)
+        {
             _curDetected.gameObject.SetActive(false);
+            _weaponAttach.SetActive(true);
+            HasGranade = true;
+        }
+    }
+
+    public void Fire()
+    {
+        if (!HasGranade) return;
+
+        _weaponAttach.SetActive(false);
+        GameObject obj = Instantiate(_granade,transform.position + Vector3.up, Quaternion.identity);
+        Granade gr = obj.GetComponent<Granade>();
+        gr.Fire(_model.transform.forward);
+        HasGranade = false;
     }
 }
