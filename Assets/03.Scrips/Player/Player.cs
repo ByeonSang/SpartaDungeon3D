@@ -46,10 +46,10 @@ public class Player : MonoBehaviour
         _curDetected = _interaction.CheckField(); // 상호작용 처리
     }
 
-    public void Jump()
+    public void Jump(float JumpForce = 1f)
     {
         // TODO::
-        if (IsGround) _curJumpPower = _jumpPower;
+        if (IsGround) _curJumpPower = _jumpPower * JumpForce;
     }
 
     public void SetGravity()
