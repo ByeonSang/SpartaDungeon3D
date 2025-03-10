@@ -72,8 +72,12 @@ public class Player : MonoBehaviour
     public void SetGravity()
     {
         IsGround = (CharCtrl.Move(Vector3.up * _curJumpPower * Time.deltaTime) & CollisionFlags.Below) != 0;
+        _curJumpPower = Mathf.Clamp(_curJumpPower, -12f, 1000f);
+        if (!IsGround)
+        {
 
-        if(!IsGround) _curJumpPower -= _gravity * Time.deltaTime;
+            _curJumpPower -= _gravity * Time.deltaTime;
+        } 
     }
 
     public void Move(Vector2 inputValue)
