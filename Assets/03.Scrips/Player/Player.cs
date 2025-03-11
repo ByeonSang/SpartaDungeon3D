@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     private Interaction _interaction;
+    public Action Hpbar { get; set; }
     public CharacterController CharCtrl { get; set; }
     private Camera cam;
     public Animator Anim { get; private set; }
@@ -121,7 +122,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(float damage)
     {
         curHealth -= damage;
-        UIManager.Instance.Hpbar?.Invoke();
+        GameManager.Instance.player.Hpbar?.Invoke();
         if(curHealth <= 0)
         {
             curHealth = 0;

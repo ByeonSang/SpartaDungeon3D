@@ -7,16 +7,18 @@ public class HPBar : MonoBehaviour
 {
     [SerializeField] private Image _fill;
 
-    private void Start()
+    private IEnumerator Start()
     {
-        UIManager.Instance.Hpbar = SetBar;
+        yield return new WaitUntil(() => GameManager.Instance.player == null);
+        
+        GameManager.Instance.player.Hpbar = SetBar;
     }
 
     private void OnDestroy()
     {
-        UIManager uiManager = UIManager.Instance;
-        if (uiManager != null)
-            uiManager.Hpbar = null;
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager != null)
+            gameManager.player.Hpbar = null;
     }
 
     private void SetBar()
