@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     private Interaction _interaction;
-    public Action Hpbar { get; set; }
+    public Action<float, float> Hpbar { get; set; }
     public CharacterController CharCtrl { get; set; }
     private Camera cam;
     public Animator Anim { get; private set; }
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
 
     [Header("StatInfo")]
     public float maxHealth;
-    public float curHealth { get; private set; }
+    private float _curHealth;
     public bool IsDead { get; private set; }
 
     [Header("Gravity")]
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
         TryGetComponent<Interaction>(out _interaction);
         _weaponAttach.SetActive(false);
 
-        curHealth = maxHealth;
+        _curHealth = maxHealth;
         IsDead = false;
     }
 
@@ -121,17 +121,17 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        curHealth -= damage;
-        GameManager.Instance.player.Hpbar?.Invoke();
-        if(curHealth <= 0)
+        _curHealth -= damage;
+        GameManager.Instance.player.Hpbar?.Invoke(_curHealth, maxHealth);
+        if(_curHealth <= 0)
         {
-            curHealth = 0;
+            _curHealth = 0;
             IsDead = true;
             Anim.SetTrigger("Die");
         }
-        else if(curHealth > maxHealth)
+        else if(_curHealth > maxHealth)
         {
-            curHealth = maxHealth;
+            _curHealth = maxHealth;
         }
         else
         {

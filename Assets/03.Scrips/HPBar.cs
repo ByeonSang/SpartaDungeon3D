@@ -21,10 +21,8 @@ public class HPBar : MonoBehaviour
             gameManager.player.Hpbar = null;
     }
 
-    private void SetBar()
+    private void SetBar(float curHealth, float maxHealth)
     {
-        Player player = GameManager.Instance.player;
-
-        _fill.fillAmount = player.curHealth / player.maxHealth;
+        _fill.fillAmount = curHealth / maxHealth;
     }
 }
